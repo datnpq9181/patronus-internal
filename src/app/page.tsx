@@ -1,11 +1,23 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import useDarkMode from "../utils/useDarkMode";
 import Navbar from "../components/navbar";
+import getNumerologyFromDOB from "../utils/getNumerologyFromDOB";
 
 const Home = () => {
   const [isDarkMode, toggleDarkMode] = useDarkMode();
+  const [fullName, setFullName] = useState("");
+  const [day, setDay] = useState("");
+  const [month, setMonth] = useState("");
+  const [year, setYear] = useState("");
+  const [numerologyNumber, setNumerologyNumber] = useState<number | null>(null);
+
+  const calculateNumerology = () => {
+    const dob = `${year}-${month}-${day}`;
+    const numerology = getNumerologyFromDOB(dob);
+    setNumerologyNumber(numerology);
+  };
 
   return (
     <div className={`App ${isDarkMode ? "dark" : ""}`} data-theme="">
@@ -19,13 +31,19 @@ const Home = () => {
                 type="text"
                 placeholder="NGUYEN THI ABC"
                 className="input input-bordered"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
               />
             </label>
           </div>
 
           <label className="input-group mb-4">
             <span className="w-full">Ngày sinh</span>
-            <select className="select select-bordered w-full">
+            <select
+              className="select select-bordered w-full"
+              value={day}
+              onChange={(e) => setDay(e.target.value)}
+            >
               <option disabled selected>
                 Nhấp để chọn
               </option>
@@ -67,7 +85,11 @@ const Home = () => {
 
           <label className="input-group mb-4">
             <span className="w-full">Tháng sinh</span>
-            <select className="select select-bordered w-full">
+            <select
+              className="select select-bordered w-full"
+              value={month}
+              onChange={(e) => setMonth(e.target.value)}
+            >
               <option disabled selected>
                 Nhấp để chọn
               </option>
@@ -93,12 +115,20 @@ const Home = () => {
                 type="text"
                 placeholder="1994"
                 className="input input-bordered"
+                value={year}
+                onChange={(e) => setYear(e.target.value)}
               />
             </label>
           </div>
-          <button className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg">
+          <button
+            className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg"
+            onClick={calculateNumerology}
+          >
             Tra Cứu Ngay
           </button>
+          {numerologyNumber && (
+            <p className="mt-4">Số chủ đạo của bạn là: {numerologyNumber}</p>
+          )}
         </div>
       </div>
     </div>
